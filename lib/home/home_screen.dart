@@ -1,48 +1,47 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:islami/colors.dart';
+import 'package:islami/home/tabs/ahadeth_tab.dart';
+import 'package:islami/home/tabs/quran_tab.dart';
+import 'package:islami/home/tabs/radio_tab.dart';
+import 'package:islami/home/tabs/sebha_tab.dart';
+import 'package:islami/home/tabs/settings_tab.dart';
+import 'package:islami/providers/my_providers.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = "Islami";
-   HomeScreen({super.key});
+  HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-   int selectedIndex=0;
+  int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    var provider=Provider.of<MyProvider>(context);
     return Stack(
       children: [
-        Image.asset('assets/images/main_bg3.png'),
+        Image.asset(
+            provider.appTheme==ThemeMode.dark?
+                'assets/images/main_dark_bg.png'
+                :
+            'assets/images/main_bg3.png'),
         Scaffold(
-          backgroundColor: Colors.transparent,
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            title: Text(
-              'islami',
-              style: GoogleFonts.elMessiri(
-                  fontSize: 30, fontWeight: FontWeight.bold),
-            ),
-            centerTitle: true,
+            title: Text('Islami'.tr(),),
           ),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: selectedIndex,
             onTap: (index) {
-           selectedIndex = index ;
-           setState(() {
-
-           });
-
+              selectedIndex = index;
+              setState(() {});
             },
-            showUnselectedLabels: false,
-            showSelectedLabels: false,
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Color(0xffb7935f),
-            selectedItemColor: Colors.black,
-            unselectedItemColor: Colors.white,
+
             items: [
               BottomNavigationBarItem(
                   icon: ImageIcon(AssetImage('assets/images/moshaf_gold.png')),
@@ -59,8 +58,17 @@ class _HomeScreenState extends State<HomeScreen> {
               BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
             ],
           ),
+          body: tabs[selectedIndex],
         ),
       ],
     );
   }
+
+  List<Widget> tabs = [
+    QuranTab(),
+    SebhaTab(),
+    RadioTab(),
+    AhadethTab(),
+    SettingsTab(),
+  ];
 }
